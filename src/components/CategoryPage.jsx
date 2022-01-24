@@ -16,8 +16,8 @@ const GridContainer = styled.div`
   grid-template-columns: auto auto auto;
   padding: 10px;
   grid-row-gap: 10px;
-  grid-column-gap: 90px;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  grid-column-gap: 50px;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 `;
 
 const GridItem = styled.div`
@@ -26,24 +26,30 @@ const GridItem = styled.div`
 
 class CategoryPage extends Component {
   render() {
+    console.log(this.props.productsArr);
+
     return (
       <div>
         <div style={{ width: "100%", display: "flex", marginTop: "50px" }}>
           <ActiveCategory>{this.props.activeCategory}</ActiveCategory>
         </div>
         <GridContainer>
-          <GridItem>
-            <ProductCard />
-          </GridItem>
-          <GridItem>
-            <ProductCard />
-          </GridItem>
-          <GridItem>
-            <ProductCard />
-          </GridItem>
-          <GridItem>
-            <ProductCard />
-          </GridItem>
+          {this.props.productsArr?.map((el) => (
+            <GridItem key={el.id}>
+              <ProductCard
+                title={el.name}
+                image={el.gallery[0]}
+                price={
+                  el.prices.filter((cur) => {
+                    return (
+                      cur.currency.label === this.props.activeCurrency.label
+                    );
+                  })[0]
+                }
+                inStock={el.inStock}
+              />
+            </GridItem>
+          ))}
         </GridContainer>
       </div>
     );
@@ -54,6 +60,8 @@ const mapStateToProps = (state) => ({
   count: state.counter.value,
   categories: state.categories.categoriesArr,
   activeCategory: state.categories.activeCategory,
+  activeCurrency: state.currencies.activeCurrency,
+  productsArr: state.products.products.products,
 });
 
 const mapDispatchToProps = {

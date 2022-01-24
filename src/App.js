@@ -14,8 +14,8 @@ function App() {
         <Routes>
           <Route path="*" element={<NotFound />} />
           <Route path="/" element={<CategoryPage />} />
+          <Route path="/cart" element={<h1>Cart</h1>} />
         </Routes>
-        <LoadingBar style={{ backgroundColor: "blue", height: "5px" }} />
       </div>
     </div>
   );

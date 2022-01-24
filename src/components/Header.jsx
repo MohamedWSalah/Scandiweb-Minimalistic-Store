@@ -22,7 +22,6 @@ const HeaderContainer = styled.div`
 const Category = styled.span`
   margin: auto 10px auto 30px;
   cursor: pointer;
-  border-bottom: ${(props) => (props.Active ? "5px solid red" : null)};
   color: white;
   padding-bottom: 10px;
   font-family: Arial, Helvetica, sans-serif;
@@ -41,7 +40,7 @@ const Select = styled.select`
   background-color: transparent;
   outline: none;
   font-size: 100%;
-  width: 80px;
+  width: fit-content;
   font-weight: bold;
   cursor: pointer;
   border-bottom-left-radius: 5px;
@@ -89,15 +88,19 @@ class Header extends Component {
   };
 
   componentDidMount() {
+    //Fetching categories names
     this.props
       .fetchCategoriesNames()
       .unwrap()
       .then(() => this.props.updateActiveCategory(this.props.categories[0]));
+
+    //Fetching Currencies
     this.props
       .fetchCurrencies()
       .unwrap()
       .then(() => this.props.updateActiveCurrency(this.props.currencies[0]));
 
+    //Fetching Products with category name
     this.props.fetchProductsWithCategoryName("all");
   }
 
@@ -140,7 +143,7 @@ class Header extends Component {
               >
                 {this.props.currencies.map((el) => (
                   <Option key={el.label} value={JSON.stringify(el)}>
-                    {el.symbol}
+                    {el.symbol} {el.label}
                   </Option>
                 ))}
               </Select>

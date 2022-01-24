@@ -1,10 +1,42 @@
 import React, { Component } from "react";
-import { connect } from "react-redux";
 import styled from "styled-components";
+import Cart from "../assets/cart.png";
 
 const Card = styled.div`
+  position: relative;
   height: fit-content;
   width: fit-content;
+  opacity: ${(props) => (props.inStock ? null : 0.4)};
+
+  :hover {
+    box-shadow: 0 0 50px grey;
+  }
+`;
+
+const CartCircle = styled.i`
+  position: absolute;
+  background: #22dd8f;
+  border-radius: 20px;
+  border-radius: 50%;
+  padding: 3px;
+`;
+const CartIcon = styled.img`
+  position: relative;
+  font-size: 24px;
+  width: 40px;
+  height: 40px;
+`;
+
+const OverlayText = styled.div`
+  display: ${(props) => (props.inStock ? "none" : null)};
+  color: black;
+  font-family: fantasy;
+  font-weight: bold;
+  font-size: xx-large;
+  position: absolute;
+  top: 30%;
+  left: 0;
+  width: 100%;
 `;
 
 const ProductTitle = styled.span`
@@ -20,24 +52,42 @@ const ProductPrice = styled.span`
 
 class ProductCard extends Component {
   render() {
+    const { title, image, price, inStock } = this.props;
+
     return (
-      <Card>
+      <Card inStock={inStock}>
+        <OverlayText inStock={inStock}>OUT OF STOCK</OverlayText>
         <div style={{ width: 300, height: 300 }}>
           <img
-            src="https://cdn.shopify.com/s/files/1/0087/6193/3920/products/DD1381200_DEOA_2_720x.jpg?v=1612816087"
-            alt=""
+            src={image}
+            alt={title}
             style={{ width: "inherit", height: "inherit" }}
           />
         </div>
+
+        <div
+          style={{
+            width: "200px",
+            textAlign: "right",
+          }}
+        >
+          <CartCircle>
+            <CartIcon src={Cart} alt="" />
+          </CartCircle>
+        </div>
+
         <div
           style={{
             display: "flex",
             flexDirection: "column",
             alignItems: "flex-start",
+            marginTop: "30px",
           }}
         >
-          <ProductTitle>ProductTitle</ProductTitle>
-          <ProductPrice>$50.00</ProductPrice>
+          <ProductTitle>{title}</ProductTitle>
+          <ProductPrice>
+            {price.currency.symbol} {price.amount}
+          </ProductPrice>
         </div>
       </Card>
     );
