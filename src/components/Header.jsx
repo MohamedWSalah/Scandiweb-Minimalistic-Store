@@ -110,7 +110,6 @@ class Header extends Component {
       this.props.updateActiveCategory(menuItem);
       this.props.fetchProductsWithCategoryName(menuItem);
     };
-
     return (
       <div>
         <HeaderContainer>
@@ -149,7 +148,7 @@ class Header extends Component {
               </Select>
 
               <div className="cart">
-                <span>1</span>
+                <span>{this.props.totalQuantitiy}</span>
                 <img src={Cart} alt="" />
               </div>
             </div>
@@ -165,6 +164,7 @@ const mapStateToProps = (state) => ({
   currencies: state.currencies.currencyArr,
   activeCategory: state.categories.activeCategory,
   activeCurrency: state.categories.activeCurrency,
+  totalQuantitiy: state.cart.totalQuantity,
 });
 
 const mapDispatchToProps = {

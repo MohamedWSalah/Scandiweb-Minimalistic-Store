@@ -19,6 +19,8 @@ const CartCircle = styled.i`
   border-radius: 20px;
   border-radius: 50%;
   padding: 3px;
+  cursor: pointer;
+  display: ${(props) => (props.hovered ? null : "none")};
 `;
 const CartIcon = styled.img`
   position: relative;
@@ -51,11 +53,19 @@ const ProductPrice = styled.span`
 `;
 
 class ProductCard extends Component {
+  state = {
+    hovered: false,
+  };
+
   render() {
-    const { title, image, price, inStock } = this.props;
+    const { title, id, image, price, inStock, addItemToCart } = this.props;
 
     return (
-      <Card inStock={inStock}>
+      <Card
+        inStock={inStock}
+        onMouseEnter={() => this.setState({ hovered: !this.state.hovered })}
+        onMouseLeave={() => this.setState({ hovered: !this.state.hovered })}
+      >
         <OverlayText inStock={inStock}>OUT OF STOCK</OverlayText>
         <div style={{ width: 300, height: 300 }}>
           <img
@@ -71,7 +81,10 @@ class ProductCard extends Component {
             textAlign: "right",
           }}
         >
-          <CartCircle>
+          <CartCircle
+            hovered={this.state.hovered}
+            onClick={() => addItemToCart(id)}
+          >
             <CartIcon src={Cart} alt="" />
           </CartCircle>
         </div>
