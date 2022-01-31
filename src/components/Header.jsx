@@ -110,6 +110,7 @@ class Header extends Component {
       this.props.updateActiveCategory(menuItem);
       this.props.fetchProductsWithCategoryName(menuItem);
     };
+
     return (
       <div>
         <HeaderContainer>

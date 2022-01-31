@@ -6,6 +6,7 @@ import { fetchCategoriesNames } from "../redux/categoriesSlice";
 import { addToCart, increaseQuantityOfItem } from "../redux/cartSlice";
 
 import ProductCard from "./ProductCard";
+import SelectingAttributes from "./SelectingAttributes";
 
 const ActiveCategory = styled.span`
   font-family: cursive;
@@ -25,9 +26,41 @@ const GridItem = styled.div`
   padding: 20px;
 `;
 
+const ShadowBox = styled.div`
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(119, 119, 119, 0.4);
+  z-index: 999;
+  display: ${(props) => (props.shadowBox ? null : "none")};
+`;
+const TextInsideShadowbox = styled.div`
+  background-color: #22dd8f;
+  width: 30%;
+  height: 15%;
+  text-align: center;
+  position: absolute;
+  top: 45%;
+  left: 0;
+  right: 0;
+  margin: auto;
+  transform: translateY(-50%);
+  display: grid;
+`;
+
 class CategoryPage extends Component {
+  state = {
+    shadowBox: false,
+    selectedProduct: "",
+  };
   render() {
     console.log(this.props.productsArr);
+
+    const setSelectedProduct = (item) => {
+      this.setState({ selectedProduct: item });
+    };
 
     const addItemToCart = (id) => {
       if (
@@ -50,8 +83,26 @@ class CategoryPage extends Component {
       }
     };
 
+    const showHideShadowbox = () => {
+      this.setState({ shadowBox: !this.state.shadowBox });
+    };
+
     return (
       <div>
+        <SelectingAttributes
+          ShowShadowBox={this.state.shadowBox}
+          addItemToCart={addItemToCart}
+          showHidebox={showHideShadowbox}
+          product={this.state.selectedProduct}
+        />
+        {/* <ShadowBox shadowBox={this.state.shadowBox}>
+          <TextInsideShadowbox>
+            <h2>Item Added</h2>
+            <button onClick={() => showHideShadowbox()}>
+              Continue Shopping
+            </button>
+          </TextInsideShadowbox>
+        </ShadowBox> */}
         <div style={{ width: "100%", display: "flex", marginTop: "50px" }}>
           <ActiveCategory>{this.props.activeCategory}</ActiveCategory>
         </div>
@@ -65,12 +116,14 @@ class CategoryPage extends Component {
                 price={
                   el.prices.filter((cur) => {
                     return (
-                      cur.currency.label === this.props.activeCurrency.label
+                      cur.currency.label === this.props.activeCurrency?.label
                     );
                   })[0]
                 }
                 inStock={el.inStock}
-                addItemToCart={addItemToCart}
+                showHideShadowbox={showHideShadowbox}
+                setSelectedProduct={setSelectedProduct}
+                el={el}
               />
             </GridItem>
           ))}
@@ -81,7 +134,6 @@ class CategoryPage extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  count: state.counter.value,
   categories: state.categories.categoriesArr,
   activeCategory: state.categories.activeCategory,
   activeCurrency: state.currencies.activeCurrency,

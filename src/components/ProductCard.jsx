@@ -9,7 +9,7 @@ const Card = styled.div`
   opacity: ${(props) => (props.inStock ? null : 0.4)};
 
   :hover {
-    box-shadow: 0 0 50px grey;
+    box-shadow: ${(props) => (props.inStock ? "0 0 50px grey" : null)};
   }
 `;
 
@@ -20,7 +20,7 @@ const CartCircle = styled.i`
   border-radius: 50%;
   padding: 3px;
   cursor: pointer;
-  display: ${(props) => (props.hovered ? null : "none")};
+  display: ${(props) => (props.hovered && props.inStock ? null : "none")};
 `;
 const CartIcon = styled.img`
   position: relative;
@@ -58,8 +58,17 @@ class ProductCard extends Component {
   };
 
   render() {
-    const { title, id, image, price, inStock, addItemToCart } = this.props;
-
+    const {
+      title,
+      id,
+      image,
+      price,
+      inStock,
+      addItemToCart,
+      showHideShadowbox,
+      setSelectedProduct,
+      el,
+    } = this.props;
     return (
       <Card
         inStock={inStock}
@@ -83,7 +92,11 @@ class ProductCard extends Component {
         >
           <CartCircle
             hovered={this.state.hovered}
-            onClick={() => addItemToCart(id)}
+            onClick={() => {
+              setSelectedProduct(el);
+              showHideShadowbox();
+            }}
+            inStock={inStock}
           >
             <CartIcon src={Cart} alt="" />
           </CartCircle>
@@ -99,7 +112,7 @@ class ProductCard extends Component {
         >
           <ProductTitle>{title}</ProductTitle>
           <ProductPrice>
-            {price.currency.symbol} {price.amount}
+            {price?.currency?.symbol} {price?.amount}
           </ProductPrice>
         </div>
       </Card>
